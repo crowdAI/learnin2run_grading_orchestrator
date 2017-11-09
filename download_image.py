@@ -23,6 +23,8 @@ def download_submission(submission_id):
             filekey = meta['file_key']
             print("File Key on S3 ", filekey)
             # Sync the file from S3 bucked to data directory
+            if os.path.exists("{}/{}".format(config.DATA_DIRECTORY, submission_id)):
+                shutil.rmtree("{}/{}".format(config.DATA_DIRECTORY, submission_id))
             os.mkdir("{}/{}".format(config.DATA_DIRECTORY, submission_id))
             s3 = boto3.client(  's3',
                                 aws_access_key_id=config.AWS_ACCESS_KEY_ID,

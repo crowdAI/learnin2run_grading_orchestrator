@@ -16,7 +16,7 @@ export SUBMISSION_IMAGE_NAME="submission_$SUBMISSION_ID_image"
 export SUBMISSION_CONTAINER_NAME="submission_$SUBMISSION_ID_container"
 export GRADER_IMAGE_NAME="spmohanty/learning2run-grader-image:v1.0"
 export GRADER_CONTAINER_NAME="grader_$SUBMISSION_ID"
-export LOG_DIRECTORY="Logs/$SUBMISSION_ID"
+export LOG_DIRECTORY="data/$SUBMISSION_ID/logs"
 mkdir -p $LOG_DIRECTORY
 
 docker create network --internal $NETWORK_NAME
@@ -25,6 +25,7 @@ docker run -itd --memory=5g --name="$GRADER_CONTAINER_NAME" --link="$SUBMISSION_
 # Copy grader service code to /home/grader_service
 docker cp grading_service $GRADER_CONTAINER_NAME:/home/
 # Start the submission execution
+docker exec -itd --name="$SUBMISSION_CONTAINER_NAME" "/etc/init.d/redis-server restart"
 docker exec -itd --name="$SUBMISSION_CONTAINER_NAME" /home/submit.sh &> $LOG_DIRECTORY/submission_container_logs.txt
 
 # Execute grading service by passing the required params
