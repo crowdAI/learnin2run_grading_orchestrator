@@ -13,7 +13,7 @@ args = parser.parse_args()
 
 seed_map = ",".join([str(x) for x in config.SEEDS])
 try:
-    grader = OsimRlRedisService(remote_host= args.host ,remote_port=int(args.port), seed_map=seed_map, max_steps=1000, verbose=True)
+    grader = OsimRlRedisService(remote_host= args.host, remote_port=int(args.port), seed_map=seed_map, max_steps=1000, verbose=True)
     result = grader.run()
     if result['type'] == OsimMessages.OSIM_RL.ENV_SUBMIT_RESPONSE:
         reward = result['payload']
@@ -22,6 +22,9 @@ try:
         _payload['grading_status'] = 'graded'
         _payload['challenge_client_name'] = config.CHALLENGE_ID
         _payload['score'] = reward
-        report.report(submission_id, _payload=_payload)
+        report.report(args.submission_id, _payload=_payload)
+    else:
+        raise Exception("Unknown response from grading service")
 except Exception as e:
+    print "Exception ::",str(e)
     report.report(args.submission_id, message="Error grading submission: "+str(e), state='failed')
