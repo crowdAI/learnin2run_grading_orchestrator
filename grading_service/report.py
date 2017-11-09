@@ -7,14 +7,15 @@ from config import Config as config
 import requests
 
 
-def report(submission_id, message, state):
+def report(submission_id, message="", state='failed', _payload=False):
     print("Reporting state '{}' for submission_id {}".format(state, submission_id))
     headers = {'Authorization' : 'Token token='+config.CROWDAI_TOKEN, "Content-Type":"application/vnd.api+json"}
-    _payload = {}
-    _payload['grading_status'] = state
-    _payload['challenge_client_name'] = config.CHALLENGE_ID
-    _payload['grading_message'] = args.message
-    r = requests.patch("{}/{}".format(config.CROWDAI_GRADER_URL, args.submission_id), params=_payload, headers=headers, verify=False)
+    if not _payload:
+        _payload = {}
+        _payload['grading_status'] = state
+        _payload['challenge_client_name'] = config.CHALLENGE_ID
+        _payload['grading_message'] = message
+    r = requests.patch("{}/{}".format(config.CROWDAI_GRADER_URL, submission_id), params=_payload, headers=headers, verify=False)
     print(r.text)
     if r.status_code != 202:
         print(r.status_code)

@@ -24,14 +24,17 @@ docker run -itd --memory=5g --name="$SUBMISSION_CONTAINER_NAME" --network=$NETWO
 docker run -itd --memory=5g --name="$GRADER_CONTAINER_NAME" --link="$SUBMISSION_CONTAINER_NAME" --network="$NETWORK_NAME" spmohanty/learning2run-grader-image:v1.0  /bin/bash
 # Copy grader service code to /home/grader_service
 docker cp grading_service $GRADER_CONTAINER_NAME:/home/
+docker exec -it $GRADER_CONTAINER_NAME chmod +x /home/grading_service/grade.sh
+
 # Start the submission execution
 docker exec -itd --name="$SUBMISSION_CONTAINER_NAME" "/etc/init.d/redis-server restart"
 docker exec -itd --name="$SUBMISSION_CONTAINER_NAME" /home/submit.sh &> $LOG_DIRECTORY/submission_container_logs.txt
 
 # Execute grading service by passing the required params
-docker exec -it --env="CROWDAI_SUBMISSION_ID=/home/SUBMISSION" --name="$GRADER_CONTAINER_NAME" /home/grading_service/run.sh | tee $LOG_DIRECTORY/grader_container_logs.txt
-# Note the `CROWDAI_SUBMISSION_ID` env variable is used by `simbody-visualizer` to dump the frames
-docker exec -it --name="$GRADER_CONTAINER_NAME" /home/grading_service/postprocess.sh | tee $LOG_DIRECTORY/grader_post_processing_logs.txt
+
+docker exec --env REMOTE_HOST=$SUBMISSION_CONTAINER_NAME --env REMOTE_PORT=6379 --env SUBMISSIONID=$SUBMISSIONID -it $GRADER_CONTAINER_NAME /home/grading_service/grade.sh | tee $LOG_DIRECTORY/grader_container_logs.txt
+
+#docker exec -it --name="$GRADER_CONTAINER_NAME" /home/grading_service/postprocess.sh | tee $LOG_DIRECTORY/grader_post_processing_logs.txt
 
 #Clean up
 docker stop $SUBMISSION_CONTAINER_NAME

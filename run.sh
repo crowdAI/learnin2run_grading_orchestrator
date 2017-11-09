@@ -67,15 +67,29 @@ mkdir -p $LOG_DIRECTORY
 docker network create --internal $NETWORK_NAME
 docker run -itd --memory=5g --name="$SUBMISSION_CONTAINER_NAME" --network=$NETWORK_NAME $SUBMISSION_IMAGE_NAME /bin/bash
 docker run -itd --memory=5g --name="$GRADER_CONTAINER_NAME" --link="$SUBMISSION_CONTAINER_NAME" --network="$NETWORK_NAME" spmohanty/learning2run-grader-image:v1.0  /bin/bash
+docker network connect grader_internet $GRADER_CONTAINER_NAME
+###TODO: Add the creation of grader_internet to the bootstrapping process, along with pulling the grader_image
 
 retval=$?
 err_message="Unable to create containers. Please contact admins."
 success_message="Successfully created containers and subnet"
 report $retval "$err_message" "$success_message"
 
-docker cp grading_service $GRADER_CONTAINER_NAME:/home/
 
-# 
+
+# """
+#   Start the submission execution
+# """
+docker exec -it $SUBMISSION_CONTAINER_NAME /etc/init.d/redis-server restart
+docker exec -itd $SUBMISSION_CONTAINER_NAME /home/submit.sh &> $LOG_DIRECTORY/submission_container_logs.txt
+
+docker cp grading_service $GRADER_CONTAINER_NAME:/home/
+docker exec -it $GRADER_CONTAINER_NAME chmod +x /home/grading_service/grade.sh
+
+docker exec --env REMOTE_HOST=$SUBMISSION_CONTAINER_NAME --env REMOTE_PORT=6379 --env SUBMISSIONID=$SUBMISSIONID -it $GRADER_CONTAINER_NAME /home/grading_service/grade.sh | tee $LOG_DIRECTORY/grader_container_logs.txt
+
+
+#
 # """
 #   Clean up
 # """
