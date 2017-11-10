@@ -13,7 +13,7 @@ args = parser.parse_args()
 
 seed_map = ",".join([str(x) for x in config.SEEDS])
 try:
-    grader = OsimRlRedisService(remote_host= args.host, remote_port=int(args.port), seed_map=seed_map, max_steps=1000, verbose=True)
+    grader = OsimRlRedisService(remote_host= args.host, remote_port=int(args.port), seed_map=seed_map, max_steps=1000, visualize=True, verbose=True)
     result = grader.run()
     if result['type'] == OsimMessages.OSIM_RL.ENV_SUBMIT_RESPONSE:
         reward = result['payload']

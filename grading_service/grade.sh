@@ -9,4 +9,5 @@ export CROWDAI_SUBMISSION_ID=/home/grading_service/$SUBMISSIONID
 #   This should be refactored after modifying the `simbody` fork at : https://github.com/spMohanty/simbody
 # """
 cd /home/grading_service
-python service.py --host=$REMOTE_HOST --port=$REMOTE_PORT --submission_id=$SUBMISSIONID
+export LD_LIBRARY_PATH=/opt/conda/envs/opensim-rl/lib/:$LD_LIBRARY_PATH
+xvfb-run -a -s "-screen 0 1400x900x24" python service.py --host=$REMOTE_HOST --port=$REMOTE_PORT --submission_id=$SUBMISSIONID
