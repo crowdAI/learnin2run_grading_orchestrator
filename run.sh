@@ -91,7 +91,7 @@ docker exec -it $GRADER_CONTAINER_NAME chmod +x /home/grading_service/grade.sh
 docker exec --env REMOTE_HOST=$SUBMISSION_CONTAINER_NAME --env REMOTE_PORT=6379 --env SUBMISSIONID=$SUBMISSIONID -it $GRADER_CONTAINER_NAME /home/grading_service/grade.sh | tee $LOG_DIRECTORY/grader_container_logs.txt
 
 docker cp $SUBMISSION_CONTAINER_NAME:/submission_container_logs.txt $LOG_DIRECTORY/submission_container_logs.txt
-
+docker cp $GRADER_CONTAINER_NAME:/home/grading_service/score.json $LOG_DIRECTORY/score.json
 
 docker stop $SUBMISSION_CONTAINER_NAME
 docker stop $GRADER_CONTAINER_NAME

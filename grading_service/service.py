@@ -3,6 +3,7 @@ from osim.redis.service import OsimRlRedisService
 from osim.redis import messages as OsimMessages
 from config import Config as config
 import report
+import json
 
 import argparse
 parser = argparse.ArgumentParser(description='Submit the result to crowdAI')
@@ -16,13 +17,14 @@ try:
     grader = OsimRlRedisService(remote_host= args.host, remote_port=int(args.port), seed_map=seed_map, max_steps=1000, visualize=True, verbose=True)
     result = grader.run()
     if result['type'] == OsimMessages.OSIM_RL.ENV_SUBMIT_RESPONSE:
-        reward = result['payload']
-        _payload = {}
+        reward = result['payload']['mean_reward']
         _payload = {}
         _payload['grading_status'] = 'graded'
         _payload['challenge_client_name'] = config.CHALLENGE_ID
         _payload['score'] = reward
         report.report(args.submission_id, _payload=_payload)
+        f = open("/home/grading_service/score.json","w")
+        f.write(json.dumps(result['payload']))
     else:
         raise Exception("Unknown response from grading service")
 except Exception as e:
