@@ -92,6 +92,9 @@ docker exec --env REMOTE_HOST=$SUBMISSION_CONTAINER_NAME --env REMOTE_PORT=6379 
 
 docker cp $SUBMISSION_CONTAINER_NAME:/submission_container_logs.txt $LOG_DIRECTORY/submission_container_logs.txt
 
+
+docker stop $SUBMISSION_CONTAINER_NAME
+docker stop $GRADER_CONTAINER_NAME
 #
 # """
 #   Clean up
