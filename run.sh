@@ -104,8 +104,8 @@ docker stop $SUBMISSION_CONTAINER_NAME
 docker stop $GRADER_CONTAINER_NAME
 
 echo "Stopping execution at `date`"
-#
-# """
-#   Clean up
-# """
-# ./cleanup_containers.sh $SUBMISSIONID
+
+"""
+  Clean up
+"""
+./cleanup_containers.sh $SUBMISSIONID
