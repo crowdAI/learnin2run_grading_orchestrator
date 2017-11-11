@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "Starting execution at `date`"
 # """
 # Initial Setup
 # """
@@ -19,6 +20,7 @@ function report(){
   if [ $retval -ne 0 ]; then
       echo "`echo $error_message | base64 --decode`"
       python grading_service/report.py --submission_id=$SUBMISSIONID --message=`echo $error_message` --state='failed'
+      echo "Stopping execution at `date`"
       exit 1
   else
       echo "`echo $success_message | base64 --decode`"
@@ -100,6 +102,8 @@ docker cp $GRADER_CONTAINER_NAME:/home/grading_service/score.json $LOG_DIRECTORY
 
 docker stop $SUBMISSION_CONTAINER_NAME
 docker stop $GRADER_CONTAINER_NAME
+
+echo "Stopping execution at `date`"
 #
 # """
 #   Clean up
