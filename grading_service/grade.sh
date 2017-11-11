@@ -2,7 +2,7 @@
 
 source activate opensim-rl
 pip install -U git+https://github.com/stanfordnmbl/osim-rl.git
-pip install boto3
+pip install boto3 timeout_decorator
 export CROWDAI_SUBMISSION_ID=/home/grading_service/$SUBMISSIONID
 # """
 #   Note the `CROWDAI_SUBMISSION_ID` env variable is used by `simbody-visualizer` to dump the frames
@@ -12,7 +12,16 @@ export CROWDAI_SUBMISSION_ID=/home/grading_service/$SUBMISSIONID
 cd /home/grading_service
 export LD_LIBRARY_PATH=/opt/conda/envs/opensim-rl/lib/:$LD_LIBRARY_PATH
 xvfb-run -a -s "-screen 0 1400x900x24" python service.py --host=$REMOTE_HOST --port=$REMOTE_PORT --submission_id=$SUBMISSIONID
-
+retval=$?
+if [ $retval -ne 0 ]; then
+    # """
+    # # Exit if the grading service fails
+    # """
+    echo "Error in Grading service....."
+    exit 1;
+else
+    echo "Grading Service exited successfully...."
+fi
 #Post process images
 echo "Generating GIF from frames...."
 convert -delay 5 -loop 1 $CROWDAI_SUBMISSION_ID/*.png $CROWDAI_SUBMISSION_ID/movie.gif

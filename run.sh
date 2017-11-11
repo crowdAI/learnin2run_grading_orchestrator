@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# """
+# Initial Setup
+# """
+docker pull spmohanty/learning2run-grader-image:v1.0
+docker network create grader_internet
 
 SUBMISSIONID=$1
 # Clean up in the beginning....Just in case :D
@@ -78,10 +83,10 @@ success_message="Successfully created containers and subnet"
 report $retval "$err_message" "$success_message"
 
 
-
 # """
 #   Start the submission execution
 # """
+report 0 "" "Starting execution of submitted container......"
 docker exec -it $SUBMISSION_CONTAINER_NAME /etc/init.d/redis-server restart
 docker exec -itd $SUBMISSION_CONTAINER_NAME bash -c "/home/submit.sh &> /submission_container_logs.txt"
 
