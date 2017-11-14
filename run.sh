@@ -22,7 +22,7 @@ function report(){
       python grading_service/report.py --submission_id=$SUBMISSIONID --message=`echo $error_message` --state='failed'
       echo "Stopping execution at `date`"
       echo "Cleaning up..."
-      ./cleanup_containers.sh $SUBMISSIONID
+      # ./cleanup_containers.sh $SUBMISSIONID
       exit 1
   else
       echo "`echo $success_message | base64 --decode`"
@@ -110,4 +110,4 @@ echo "Stopping execution at `date`"
 # """
 #   Clean up
 # """
-./cleanup_containers.sh $SUBMISSIONID
+# ./cleanup_containers.sh $SUBMISSIONID
