@@ -99,6 +99,9 @@ docker exec -i $GRADER_CONTAINER_NAME chmod +x /home/grading_service/grade.sh
 
 docker exec --env REMOTE_HOST=$SUBMISSION_CONTAINER_NAME --env REMOTE_PORT=6379 --env SUBMISSIONID=$SUBMISSIONID -i $GRADER_CONTAINER_NAME /home/grading_service/grade.sh &> $LOG_DIRECTORY/grader_container_logs.txt
 
+# Copy over the images
+mkdir -p $LOG_DIRECTORY/video_frames/
+docker cp $GRADER_CONTAINER_NAME:/home/grading_service/$SUBMISSIONID $LOG_DIRECTORY/video_frames/
 docker cp $SUBMISSION_CONTAINER_NAME:/submission_container_logs.txt $LOG_DIRECTORY/submission_container_logs.txt
 docker cp $GRADER_CONTAINER_NAME:/home/grading_service/score.json $LOG_DIRECTORY/score.json
 
