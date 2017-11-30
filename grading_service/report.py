@@ -9,6 +9,8 @@ import requests
 
 def report(submission_id, message="", state='failed', _payload=False):
     print("Reporting state '{}' for submission_id {}".format(state, submission_id))
+    if config.DISABLE_REPORTING:
+        return False
     headers = {'Authorization' : 'Token token='+config.CROWDAI_TOKEN, "Content-Type":"application/vnd.api+json"}
     if not _payload:
         _payload = {}
