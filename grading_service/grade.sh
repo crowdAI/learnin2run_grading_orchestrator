@@ -22,16 +22,17 @@ if [ $retval -ne 0 ]; then
 else
     echo "Grading Service exited successfully...."
 fi
-#Post process images
-echo "Generating GIF from frames...."
-convert -delay 5 -loop 1 $CROWDAI_SUBMISSION_ID/*.png $CROWDAI_SUBMISSION_ID/movie.gif
-rm -rf $CROWDAI_SUBMISSION_ID/*.png
 
-echo "Converting gif to mp4..."
-avconv -y -an -i $CROWDAI_SUBMISSION_ID/movie.gif -vcodec libx264 -pix_fmt yuv420p -profile:v baseline -level 3 $CROWDAI_SUBMISSION_ID/movie.mp4
-
-echo "Scaling down mp4 for thumbnail"
-avconv -y -i $CROWDAI_SUBMISSION_ID/movie.mp4 -vf scale=268:200 -c:a copy $CROWDAI_SUBMISSION_ID/movie_thumb.mp4
-
-echo "Uploading video...."
-python -c "import upload; upload.upload('`echo $SUBMISSIONID`', '`echo $CROWDAI_SUBMISSION_ID/movie.mp4`', '`echo $CROWDAI_SUBMISSION_ID/movie_thumb.mp4`')"
+# #Post process images
+# echo "Generating GIF from frames...."
+# convert -delay 5 -loop 1 $CROWDAI_SUBMISSION_ID/*.png $CROWDAI_SUBMISSION_ID/movie.gif
+# rm -rf $CROWDAI_SUBMISSION_ID/*.png
+#
+# echo "Converting gif to mp4..."
+# avconv -y -an -i $CROWDAI_SUBMISSION_ID/movie.gif -vcodec libx264 -pix_fmt yuv420p -profile:v baseline -level 3 $CROWDAI_SUBMISSION_ID/movie.mp4
+#
+# echo "Scaling down mp4 for thumbnail"
+# avconv -y -i $CROWDAI_SUBMISSION_ID/movie.mp4 -vf scale=268:200 -c:a copy $CROWDAI_SUBMISSION_ID/movie_thumb.mp4
+#
+# echo "Uploading video...."
+# python -c "import upload; upload.upload('`echo $SUBMISSIONID`', '`echo $CROWDAI_SUBMISSION_ID/movie.mp4`', '`echo $CROWDAI_SUBMISSION_ID/movie_thumb.mp4`')"
