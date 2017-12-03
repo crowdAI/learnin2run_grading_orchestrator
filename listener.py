@@ -6,12 +6,12 @@ import subprocess
 import os
 
 while True:
-    print "="*80
-    print "*"*80
-    print "Waiting to process a New submission at :: ", config.REDIS_Q
+    print("="*80)
+    print("*"*80)
+    print("Waiting to process a New submission at :: ", config.REDIS_Q)
     redis_conn = redis.Redis(connection_pool=POOL)
     channel, submission_id = redis_conn.brpop(config.REDIS_Q)
-    print channel, submission_id
+    print(channel, submission_id)
     """
         Create necessary directory structure if not exists already
     """
@@ -26,6 +26,6 @@ while True:
 
 
     overall_log_path = "data/{}/logs/overall_logs.txt".format(submission_id)
-    cmd = ['./run.sh', str(submission_id)]
+    cmd = ['./run.sh', submission_id]
     with open(overall_log_path, "w") as out:
         return_code = subprocess.call(cmd, stdout=out)
