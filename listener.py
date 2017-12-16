@@ -11,6 +11,7 @@ while True:
     print("Waiting to process a New submission at :: ", config.REDIS_Q)
     redis_conn = redis.Redis(connection_pool=POOL)
     channel, submission_id = redis_conn.brpop(config.REDIS_Q)
+    submission_id = submission_id.decode('utf-8')
     print(channel, submission_id)
     """
         Create necessary directory structure if not exists already

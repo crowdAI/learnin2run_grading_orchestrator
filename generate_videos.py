@@ -5,7 +5,7 @@ import glob
 import os
 
 SUBMISSION_IDS = []
-for _video_dir in glob.glob("data/*/logs/video_frames"):
+for _video_dir in glob.glob("data/*/logs/video_frames_newPov"):
     _sub_id = _video_dir.split("/")[-3]
     SUBMISSION_IDS.append(_sub_id)
 

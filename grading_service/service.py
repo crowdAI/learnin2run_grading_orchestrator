@@ -17,7 +17,7 @@ args = parser.parse_args()
 seed_map = ",".join([str(x) for x in config.SEEDS])
 try:
     begin = time.time()
-    grader = OsimRlRedisService(remote_host= args.host, remote_port=int(args.port), seed_map=seed_map, max_steps=1000, visualize=True, verbose=True)
+    grader = OsimRlRedisService(remote_host= args.host, remote_port=int(args.port), seed_map=seed_map, max_steps=1000, difficulty=2, max_obstacles=0, visualize=True, verbose=True)
     @timeout_decorator.timeout(12*60*60, use_signals=False) # 12*60*60 seconds (12 hours)
     def run_grader(grader):
         return grader.run()
