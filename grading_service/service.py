@@ -14,6 +14,7 @@ parser.add_argument('--port', dest='port', action='store', required=True)
 parser.add_argument('--submission_id', dest='submission_id', action='store', required=True)
 args = parser.parse_args()
 
+print("Submission_ID: ", args.submission_id)
 seed_map = ",".join([str(x) for x in config.SEEDS])
 try:
     begin = time.time()

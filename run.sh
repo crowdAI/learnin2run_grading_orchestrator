@@ -92,7 +92,7 @@ report $retval "$err_message" "$success_message"
 # """
 report 0 "" "Starting execution of submitted container......"
 docker exec -i $SUBMISSION_CONTAINER_NAME /etc/init.d/redis-server restart
-docker exec -id $SUBMISSION_CONTAINER_NAME bash -c "/home/submit.sh &> /submission_container_logs.txt"
+docker exec -id $SUBMISSION_CONTAINER_NAME bash -c "/home/submit.sh &> /submission_container_logs_1.txt"
 
 docker cp grading_service $GRADER_CONTAINER_NAME:/home/
 docker cp simbody/Simbody/Visualizer/simbody-visualizer/simbody-visualizer.cpp $GRADER_CONTAINER_NAME:/home/simbody/Simbody/Visualizer/simbody-visualizer/simbody-visualizer.cpp
@@ -100,7 +100,7 @@ docker exec -i $GRADER_CONTAINER_NAME /home/grading_service/rebuild-simbody.sh
 
 docker exec -i $GRADER_CONTAINER_NAME chmod +x /home/grading_service/grade.sh
 
-docker exec --env REMOTE_HOST=$SUBMISSION_CONTAINER_NAME --env REMOTE_PORT=6379 --env SUBMISSIONID=$SUBMISSIONID -i $GRADER_CONTAINER_NAME /home/grading_service/grade.sh &> $LOG_DIRECTORY/grader_container_logs.txt
+docker exec --env REMOTE_HOST=$SUBMISSION_CONTAINER_NAME --env REMOTE_PORT=6379 --env SUBMISSIONID=$SUBMISSIONID -i $GRADER_CONTAINER_NAME /home/grading_service/grade.sh &> $LOG_DIRECTORY/grader_container_logs_1.txt
 
 # Copy over the images
 mkdir -p $LOG_DIRECTORY/video_frames_newPov/
